@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package deliveryplanner;
+
+option go_package = "github.com/Arcanm/deliveryPlannerGolang/proto";
+
+import "google/protobuf/timestamp.proto";
+import "proto/route.proto";
+
+// VehicleType represents the type of vehicle a driver uses
+enum VehicleType {
+  VEHICLE_TYPE_UNSPECIFIED = 0;
+  VEHICLE_TYPE_BIKE = 1;
+  VEHICLE_TYPE_VAN = 2;
+  VEHICLE_TYPE_TRUCK = 3;
+}
+
+// Driver represents a delivery driver
+message Driver {
+  string id = 1;
+  string name = 2;
+  VehicleType vehicle_type = 3;
+  bool active = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+// CreateDriverRequest represents the request to create a driver
+message CreateDriverRequest {
+  string name = 1;
+  VehicleType vehicle_type = 2;
+}
+
+// CreateDriverResponse represents the response after creating a driver
+message CreateDriverResponse {
+  Driver driver = 1;
+}
+
+// GetDriverRequest represents the request to get a driver
+message GetDriverRequest {
+  string id = 1;
+}
+
+// GetDriverResponse represents the response after getting a driver
+message GetDriverResponse {
+  Driver driver = 1;
+}
+
+// ListDriversRequest represents the request to list drivers
+message ListDriversRequest {
+  // Empty for now, can add pagination later
+}
+
+// ListDriversResponse represents the response after listing drivers
+message ListDriversResponse {
+  repeated Driver drivers = 1;
+}
+
+// UpdateDriverRequest represents the request to update a driver
+message UpdateDriverRequest {
+  string id = 1;
+  string name = 2;
+  VehicleType vehicle_type = 3;
+  bool active = 4;
+}
+
+// UpdateDriverResponse represents the response after updating a driver
+message UpdateDriverResponse {
+  Driver driver = 1;
+}
+
+// DeleteDriverRequest represents the request to delete a driver
+message DeleteDriverRequest {
+  string id = 1;
+}
+
+// DeleteDriverResponse represents the response after deleting a driver
+message DeleteDriverResponse {
+  // Empty for now
+}
+
+// GetDriverRoutesRequest represents the request to get a driver's routes
+message GetDriverRoutesRequest {
+  string driver_id = 1;
+}
+
+// GetDriverRoutesResponse represents the response after getting a driver's routes
+message GetDriverRoutesResponse {
+  repeated Route routes = 1;
+}
+
+// DriverService provides gRPC methods for driver operations
+service DriverService {
+  rpc CreateDriver(CreateDriverRequest) returns (CreateDriverResponse) {}
+  rpc GetDriver(GetDriverRequest) returns (GetDriverResponse) {}
+  rpc ListDrivers(ListDriversRequest) returns (ListDriversResponse) {}
+  rpc UpdateDriver(UpdateDriverRequest) returns (UpdateDriverResponse) {}
+  rpc DeleteDriver(DeleteDriverRequest) returns (DeleteDriverResponse) {}
+  rpc GetDriverRoutes(GetDriverRoutesRequest) returns (GetDriverRoutesResponse) {}
+} 

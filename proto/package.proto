@@ -1,0 +1,164 @@
+syntax = "proto3";
+
+package deliveryplanner;
+
+option go_package = "github.com/Arcanm/deliveryPlannerGolang/proto";
+
+import "google/protobuf/timestamp.proto";
+
+// PackageStatus represents the current status of a package
+enum PackageStatus {
+  PACKAGE_STATUS_UNSPECIFIED = 0;
+  PACKAGE_STATUS_PENDING = 1;
+  PACKAGE_STATUS_ON_ROUTE = 2;
+  PACKAGE_STATUS_DELIVERED = 3;
+  PACKAGE_STATUS_FAILED = 4;
+}
+
+// Location represents a geographical location
+message Location {
+  double latitude = 1;
+  double longitude = 2;
+}
+
+// Package represents a delivery package
+message Package {
+  string id = 1;
+  string tracking_number = 2;
+  string customer_name = 3;
+  string customer_address = 4;
+  string customer_phone = 5;
+  double weight_kg = 6;
+  double volume_m3 = 7;
+  bool delivered = 8;
+  google.protobuf.Timestamp delivery_timestamp = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+// CreatePackageRequest represents the request to create a package
+message CreatePackageRequest {
+  string tracking_number = 1;
+  string customer_name = 2;
+  string customer_address = 3;
+  string customer_phone = 4;
+  double weight_kg = 5;
+  double volume_m3 = 6;
+}
+
+// CreatePackageResponse represents the response after creating a package
+message CreatePackageResponse {
+  Package package = 1;
+}
+
+// GetPackageRequest represents the request to get a package
+message GetPackageRequest {
+  string id = 1;
+}
+
+// GetPackageResponse represents the response after getting a package
+message GetPackageResponse {
+  Package package = 1;
+}
+
+// GetPackageByTrackingNumberRequest represents the request to get a package by tracking number
+message GetPackageByTrackingNumberRequest {
+  string tracking_number = 1;
+}
+
+// GetPackageByTrackingNumberResponse represents the response after getting a package by tracking number
+message GetPackageByTrackingNumberResponse {
+  Package package = 1;
+}
+
+// ListPackagesRequest represents the request to list packages
+message ListPackagesRequest {
+  // Empty for now, can add pagination later
+}
+
+// ListPackagesResponse represents the response after listing packages
+message ListPackagesResponse {
+  repeated Package packages = 1;
+}
+
+// UpdatePackageRequest represents the request to update a package
+message UpdatePackageRequest {
+  string id = 1;
+  string tracking_number = 2;
+  string customer_name = 3;
+  string customer_address = 4;
+  string customer_phone = 5;
+  double weight_kg = 6;
+  double volume_m3 = 7;
+}
+
+// UpdatePackageResponse represents the response after updating a package
+message UpdatePackageResponse {
+  Package package = 1;
+}
+
+// UpdatePackageStatusRequest represents the request to update a package's status
+message UpdatePackageStatusRequest {
+  string id = 1;
+  PackageStatus status = 2;
+}
+
+// UpdatePackageStatusResponse represents the response after updating a package's status
+message UpdatePackageStatusResponse {
+  Package package = 1;
+}
+
+// MarkPackageAsDeliveredRequest represents the request to mark a package as delivered
+message MarkPackageAsDeliveredRequest {
+  string id = 1;
+}
+
+// MarkPackageAsDeliveredResponse represents the response after marking a package as delivered
+message MarkPackageAsDeliveredResponse {
+  Package package = 1;
+}
+
+// DeletePackageRequest represents the request to delete a package
+message DeletePackageRequest {
+  string id = 1;
+}
+
+// DeletePackageResponse represents the response after deleting a package
+message DeletePackageResponse {
+  // Empty for now
+}
+
+// AssignToRouteRequest represents the request to assign a package to a route
+message AssignToRouteRequest {
+  string package_id = 1;
+  string route_id = 2;
+}
+
+// AssignToRouteResponse represents the response after assigning a package to a route
+message AssignToRouteResponse {
+  // Empty for now
+}
+
+// GetPackagesByRouteRequest represents the request to get packages by route
+message GetPackagesByRouteRequest {
+  string route_id = 1;
+}
+
+// GetPackagesByRouteResponse represents the response after getting packages by route
+message GetPackagesByRouteResponse {
+  repeated Package packages = 1;
+}
+
+// PackageService provides gRPC methods for package operations
+service PackageService {
+  rpc CreatePackage(CreatePackageRequest) returns (CreatePackageResponse) {}
+  rpc GetPackage(GetPackageRequest) returns (GetPackageResponse) {}
+  rpc GetPackageByTrackingNumber(GetPackageByTrackingNumberRequest) returns (GetPackageByTrackingNumberResponse) {}
+  rpc ListPackages(ListPackagesRequest) returns (ListPackagesResponse) {}
+  rpc UpdatePackage(UpdatePackageRequest) returns (UpdatePackageResponse) {}
+  rpc UpdatePackageStatus(UpdatePackageStatusRequest) returns (UpdatePackageStatusResponse) {}
+  rpc MarkPackageAsDelivered(MarkPackageAsDeliveredRequest) returns (MarkPackageAsDeliveredResponse) {}
+  rpc DeletePackage(DeletePackageRequest) returns (DeletePackageResponse) {}
+  rpc AssignToRoute(AssignToRouteRequest) returns (AssignToRouteResponse) {}
+  rpc GetPackagesByRoute(GetPackagesByRouteRequest) returns (GetPackagesByRouteResponse) {}
+} 

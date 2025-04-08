@@ -1,0 +1,128 @@
+syntax = "proto3";
+
+package deliveryplanner;
+
+option go_package = "github.com/Arcanm/deliveryPlannerGolang/proto";
+
+import "google/protobuf/timestamp.proto";
+
+// PackageRoute represents a package assigned to a route
+message PackageRoute {
+  string package_id = 1;
+  int32 order_in_route = 2;
+  bool delivered = 3;
+  google.protobuf.Timestamp delivery_timestamp = 4;
+}
+
+// Route represents a delivery route
+message Route {
+  string id = 1;
+  string driver_id = 2;
+  google.protobuf.Timestamp date = 3;
+  repeated PackageRoute packages = 4;
+  float estimated_distance_km = 5;
+  int32 estimated_time_min = 6;
+  bool completed = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+// CreateRouteRequest represents the request to create a route
+message CreateRouteRequest {
+  string driver_id = 1;
+  google.protobuf.Timestamp date = 2;
+}
+
+// CreateRouteResponse represents the response after creating a route
+message CreateRouteResponse {
+  Route route = 1;
+}
+
+// GetRouteRequest represents the request to get a route
+message GetRouteRequest {
+  string id = 1;
+}
+
+// GetRouteResponse represents the response after getting a route
+message GetRouteResponse {
+  Route route = 1;
+}
+
+// ListRoutesRequest represents the request to list routes
+message ListRoutesRequest {
+  // Empty for now, can add pagination later
+}
+
+// ListRoutesResponse represents the response after listing routes
+message ListRoutesResponse {
+  repeated Route routes = 1;
+}
+
+// UpdateRouteRequest represents the request to update a route
+message UpdateRouteRequest {
+  string id = 1;
+  string driver_id = 2;
+  google.protobuf.Timestamp date = 3;
+  double estimated_distance_km = 4;
+  int32 estimated_time_min = 5;
+}
+
+// UpdateRouteResponse represents the response after updating a route
+message UpdateRouteResponse {
+  Route route = 1;
+}
+
+// MarkRouteAsCompletedRequest represents the request to mark a route as completed
+message MarkRouteAsCompletedRequest {
+  string id = 1;
+}
+
+// MarkRouteAsCompletedResponse represents the response after marking a route as completed
+message MarkRouteAsCompletedResponse {
+  Route route = 1;
+}
+
+// AddPackagesToRouteRequest represents the request to add packages to a route
+message AddPackagesToRouteRequest {
+  string route_id = 1;
+  repeated string package_ids = 2;
+}
+
+// AddPackagesToRouteResponse represents the response after adding packages to a route
+message AddPackagesToRouteResponse {
+  Route route = 1;
+}
+
+// UpdatePackageDeliveryStatusRequest represents the request to update a package's delivery status in a route
+message UpdatePackageDeliveryStatusRequest {
+  string route_id = 1;
+  string package_id = 2;
+  bool delivered = 3;
+}
+
+// UpdatePackageDeliveryStatusResponse represents the response after updating a package's delivery status
+message UpdatePackageDeliveryStatusResponse {
+  Route route = 1;
+}
+
+// DeleteRouteRequest represents the request to delete a route
+message DeleteRouteRequest {
+  string id = 1;
+}
+
+// DeleteRouteResponse represents the response after deleting a route
+message DeleteRouteResponse {
+  // Empty for now
+}
+
+// RouteService provides gRPC methods for route operations
+service RouteService {
+  rpc CreateRoute(CreateRouteRequest) returns (CreateRouteResponse) {}
+  rpc GetRoute(GetRouteRequest) returns (GetRouteResponse) {}
+  rpc ListRoutes(ListRoutesRequest) returns (ListRoutesResponse) {}
+  rpc UpdateRoute(UpdateRouteRequest) returns (UpdateRouteResponse) {}
+  rpc MarkRouteAsCompleted(MarkRouteAsCompletedRequest) returns (MarkRouteAsCompletedResponse) {}
+  rpc AddPackagesToRoute(AddPackagesToRouteRequest) returns (AddPackagesToRouteResponse) {}
+  rpc UpdatePackageDeliveryStatus(UpdatePackageDeliveryStatusRequest) returns (UpdatePackageDeliveryStatusResponse) {}
+  rpc DeleteRoute(DeleteRouteRequest) returns (DeleteRouteResponse) {}
+} 

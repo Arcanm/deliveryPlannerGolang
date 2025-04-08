@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=delivery_planner
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"  # HTTP
+      - "50051:50051"  # gRPC
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017
+      - MONGODB_DB=delivery_planner
+      - HTTP_PORT=8080
+      - GRPC_PORT=50051
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_data:
